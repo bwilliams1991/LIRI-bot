@@ -14,7 +14,7 @@ var client = new Twitter(keys.twitter);
 
 var key = process.argv[2];
 var spotifySearch = "0hrBpAOgrt8RXigk83LLNE"
-var sTerm = process.argv[3];
+var query = process.argv[3];
 // search term is not working -------------------------
 
 switch (key) {
@@ -42,20 +42,17 @@ switch (key) {
 		break;
 
 	case `spotify-this-song`:
-	if (true) {
-		// if (sTerm == !spotifySearch) {
-			// console.log(sTerm);
-			// spotifySearch = sTerm;
-			spotify.request('https://api.spotify.com/v1/tracks/' + sTerm)
-				.then(function (data) {
-					console.log("\n" + data.artists[0].name);
-					console.log(data.name);
-					console.log(data.external_urls.spotify);
-					console.log(data.album.name);
-				})
-				.catch(function (err) {
-					console.error('Error occurred: ' + err);
-				});
+		if (process.argv[3]) {
+			spotify.search({ type: 'track', query: query, limit: 1 }, function (err, data) {
+				if (err) {
+					return console.log('Error occurred: ' + err);
+				}
+				console.log("\n" + data.tracks.items[0].artists[0].name);
+				console.log(data.tracks.items[0].name);
+				console.log(data.tracks.items[0].preview_url);
+				console.log(data.tracks.items[0].album.name);
+
+			});
 		} else {
 			spotify.request('https://api.spotify.com/v1/tracks/' + spotifySearch)
 				.then(function (data) {
@@ -67,33 +64,33 @@ switch (key) {
 				.catch(function (err) {
 					console.error('Error occurred: ' + err);
 				});
-			}
+		};
 		break;
 	case `movie-this`:
 		// debug
-		// console.log(queryUrl);
-		// var nodeArgs = process.argv;
-		// var movieName = "";
+		console.log(queryUrl);
+		var nodeArgs = process.argv;
+		var movieName = nodeArgs[3];
 
-		// var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+		var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-		// for (var i = 2; i < nodeArgs.length; i++) {
+		for (var i = 2; i < nodeArgs.length; i++) {
 
-		// 	if (i > 2 && i < nodeArgs.length) {
-		// 		movieName = movieName + "+" + nodeArgs[i];
-		// 	}
-		// 	else {
-		// 		movieName += nodeArgs[i];
-		// 	}
-		// }
-		// request(queryUrl, function (error, response, body) {
+			if (i > 2 && i < nodeArgs.length) {
+				movieName = movieName + "+" + nodeArgs[i];
+			}
+			else {
+				movieName += nodeArgs[i];
+			}
+		}
+		request(queryUrl, function (error, response, body) {
 
-		// 	// If the request is successful
-		// 	if (!error && response.statusCode === 200) {
-		// 		console.log(response);
-		// 		// console.log("Release Year: " + JSON.parse(body).Year);
-		// 	}
-		// });
+			// If the request is successful
+			if (!error && response.statusCode === 200) {
+				// console.log(response);
+				console.log("Release Year: " + JSON.parse(body));
+			}
+		});
 
 		break;
 	case `do-what-it-says`:
