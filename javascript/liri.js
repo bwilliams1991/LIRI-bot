@@ -68,7 +68,7 @@ switch (key) {
 		break;
 	case `movie-this`:
 		// debug
-		console.log(queryUrl);
+		// console.log(queryUrl);
 		var nodeArgs = process.argv;
 		var movieName = nodeArgs[3];
 
@@ -87,56 +87,40 @@ switch (key) {
 
 			// If the request is successful
 			if (!error && response.statusCode === 200) {
-				// console.log(response);
-				console.log("Release Year: " + JSON.parse(body));
+				// console.log(body);
+				console.log("Title: " + JSON.parse(body).Title);
+				console.log("Release Year: " + JSON.parse(body).Year);
+				console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+				console.log("Rotten Tomatoes: " + JSON.parse(body).Ratings[1].Value);
+				console.log("Language: " + JSON.parse(body).Language);
+				console.log("Plot: " + JSON.parse(body).Plot);
+				console.log("Actors: " + JSON.parse(body).Actors);
 			}
 		});
 
 		break;
 	case `do-what-it-says`:
+	fs.readFile('random.txt', "utf8", function (err, data) {
+		if (err) {
+			return console.log("There was a problem: " + err);
+		}
+		console.log(data);
 
+		var input = (' node javascript/liri.js ' +  data);
+		exec(input, function(err, stdout, stderr){
+			console.log(stdout);
+			if(err){
+				console.log("err:", err);
+			}
+			if(stderr){
+				console.log("stderr:", stderr);
+			}
+		});
+
+
+	});
 		break;
 	default: console.log("This is not a valid command Please Choose one of the following: \n my-tweets \n spotify-this-song \n movie-this \n do-what-it-says");
 		break;
 }
 
-
-
-// {album: { album_type: 'album', artists: [[Object]], available_markets:[],
-// 	external_urls: { spotify: 'https://open.spotify.com/album/5OVGwMCexoHavOar6v4al5' },
-// 					 href: 'https://api.spotify.com/v1/albums/5OVGwMCexoHavOar6v4al5',
-// 						 id: '5OVGwMCexoHavOar6v4al5',
-// 				 images: [[Object], [Object], [Object]],
-// 					 name: 'Interstellar: Original Motion Picture Soundtrack (Deluxe Digital Version)',
-// 						release_date: '2014-11-21',
-// 							release_date_precision: 'day',
-// 								type: 'album',
-// 									uri: 'spotify:album:5OVGwMCexoHavOar6v4al5'
-// 	},
-// 	artists:
-// 	[{
-// 		external_urls: [Object],
-// 		href: 'https://api.spotify.com/v1/artists/0YC192cP3KPCRWx8zr8MfZ',
-// 		id: '0YC192cP3KPCRWx8zr8MfZ',
-// 		name: 'Hans Zimmer',
-// 		type: 'artist',
-// 		uri: 'spotify:artist:0YC192cP3KPCRWx8zr8MfZ'
-// 	}],
-// 		available_markets:
-// 	[],
-// 		disc_number: 1,
-// 			duration_ms: 126959,
-// 				explicit: false,
-// 					external_ids: { isrc: 'USNLR1400774' },
-// 	external_urls:
-// 	{ spotify: 'https://open.spotify.com/track/15WRWc3qqlyAzTne9q5tQK' },
-// 	href: 'https://api.spotify.com/v1/tracks/15WRWc3qqlyAzTne9q5tQK',
-// 		id: '15WRWc3qqlyAzTne9q5tQK',
-// 			is_local: false,
-// 				name: 'Cornfield Chase',
-// 					popularity: 69,
-// 						preview_url: 'https://p.scdn.co/mp3-preview/2be1387d787a1e1c7c2b7ddb5370126a769ca0f1?cid=569fd0cf5e1540328d874b19e3d1b5d5',
-// 							track_number: 2,
-// 								type: 'track',
-// 									uri: 'spotify:track:15WRWc3qqlyAzTne9q5tQK'
-// }
